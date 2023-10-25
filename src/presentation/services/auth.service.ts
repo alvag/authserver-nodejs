@@ -1,6 +1,7 @@
 import { RegisterUserDto } from '../../domain/dtos';
 import { UserModel } from '../../data';
 import { CustomError } from '../../domain/errors';
+import { UserEntity } from '../../domain/entities';
 
 export class AuthService {
 
@@ -9,7 +10,17 @@ export class AuthService {
 
         if ( existUser ) throw CustomError.badRequest( 'Email already exists' );
 
-        return 'User created';
+        try {
+            const user = await UserModel.create( registerUserDto );
+            await user.save();
+            const { password, ...createdUser } = UserEntity.fromObject( user );
+            return {
+                user: createdUser,
+                token: '',
+            };
+        } catch ( error ) {
+            throw CustomError.internalError( `${ error }` );
+        }
     }
 
 }
