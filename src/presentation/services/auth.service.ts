@@ -2,6 +2,7 @@ import { RegisterUserDto } from '../../domain/dtos';
 import { UserModel } from '../../data';
 import { CustomError } from '../../domain/errors';
 import { UserEntity } from '../../domain/entities';
+import { bcryptAdapter } from '../../config';
 
 export class AuthService {
 
@@ -12,8 +13,11 @@ export class AuthService {
 
         try {
             const user = await UserModel.create( registerUserDto );
+            user.password = bcryptAdapter.hash( registerUserDto.password );
             await user.save();
+
             const { password, ...createdUser } = UserEntity.fromObject( user );
+
             return {
                 user: createdUser,
                 token: '',
