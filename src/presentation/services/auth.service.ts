@@ -2,7 +2,7 @@ import { LoginUserDto, RegisterUserDto } from '../../domain/dtos';
 import { UserModel } from '../../data';
 import { CustomError } from '../../domain/errors';
 import { UserEntity } from '../../domain/entities';
-import { bcryptAdapter } from '../../config';
+import { bcryptAdapter, JwtAdapter } from '../../config';
 
 export class AuthService {
 
@@ -36,9 +36,16 @@ export class AuthService {
 
         const { password, ...userEntity } = UserEntity.fromObject( user );
 
+        const token = await JwtAdapter.generateToken( {
+            id: userEntity.id,
+            email: userEntity.email,
+        } );
+
+        if ( !token ) throw CustomError.internalError( 'Error generating token' );
+
         return {
             user: userEntity,
-            token: '',
+            token,
         };
     }
 
