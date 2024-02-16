@@ -6,6 +6,10 @@ export const productSchema = new Schema( {
         required: [ true, 'Name is required' ],
         unique: true,
     },
+    available: {
+        type: Boolean,
+        default: false,
+    },
     price: {
         type: Number,
         default: 0,
@@ -22,6 +26,14 @@ export const productSchema = new Schema( {
         type: Schema.Types.ObjectId,
         ref: 'Category',
         required: [ true, 'Category is required' ],
+    },
+} );
+
+productSchema.set( 'toJSON', {
+    virtuals: true,
+    versionKey: false,
+    transform: ( doc, ret ) => {
+        delete ret._id;
     },
 } );
 

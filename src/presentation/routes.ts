@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { AuthRoutes } from './auth';
 import { CategoryRoutes } from './category';
-import { AuthMiddleware } from './middlewares';
+import { ProductsRoutes } from './products';
 
 
 export class AppRoutes {
@@ -12,7 +12,8 @@ export class AppRoutes {
         const router = Router();
 
         router.use( '/api/auth', AuthRoutes.routes );
-        router.use( '/api/categories', AuthMiddleware.validateJWT, CategoryRoutes.routes );
+        router.use( '/api/categories', CategoryRoutes.routes );
+        router.use( '/api/products', ProductsRoutes.routes );
 
         return router;
     }
