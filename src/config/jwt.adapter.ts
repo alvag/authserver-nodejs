@@ -11,7 +11,12 @@ export class JwtAdapter {
         } );
     }
 
-    static validaToken( token: string ) {
-        throw new Error( 'Method not implemented.' );
+    static async validaToken( token: string ) {
+        return new Promise( resolve => {
+            jwt.verify( token, envs.JWT_SECRET_KEY, ( err, decoded ) => {
+                if ( err ) return resolve( undefined );
+                resolve( decoded );
+            } );
+        } );
     }
 }
