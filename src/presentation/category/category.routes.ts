@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { CategoryController } from './category.controller';
+import { CategoryService } from '../services';
 
 
 export class CategoryRoutes {
@@ -9,7 +10,7 @@ export class CategoryRoutes {
 
         const router = Router();
 
-        const controller = new CategoryController();
+        const controller = new CategoryController( new CategoryService() );
 
         router.get( '/', controller.getCategories );
         router.post( '/', controller.createCategory );
